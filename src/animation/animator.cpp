@@ -26,7 +26,9 @@ void Animator::update()
 
             lastBlink = now;
 
-            face.setEyeSize(18,2);
+            // Close eyelids
+            face.setUpperLid(11);
+            face.setLowerLid(11);
         }
     }
     else
@@ -35,7 +37,9 @@ void Animator::update()
         {
             blinking = false;
 
-            face.setEyeSize(18,22);
+            // Open eyelids
+            face.setUpperLid(0);
+            face.setLowerLid(0);
 
             blinkTime = random(3000,6000);
         }
@@ -55,9 +59,9 @@ void Animator::update()
 
 void Animator::randomLook()
 {
-    int dx=random(-8,9);
+    int dx=random(-3,4);
 
-    int dy=random(-5,6);
+    int dy=random(-2,3);
 
     face.look(dx,dy);
 }

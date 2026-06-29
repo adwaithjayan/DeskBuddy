@@ -19,6 +19,8 @@ namespace
 
     constexpr float LID_SPEED = 180.0f;
     constexpr float PUPIL_SPEED = 220.0f;
+
+     
 }
 
 Face::Face()
@@ -156,13 +158,14 @@ void Face::update()
 
 void Face::look(float dx, float dy)
 {
-    left.targetPosition.set(
-        LEFT_X + dx,
-        EYE_Y + dy);
+    constexpr float MAX_PUPIL_X = 4.0f;
+    constexpr float MAX_PUPIL_Y = 4.0f;
 
-    right.targetPosition.set(
-        RIGHT_X + dx,
-        EYE_Y + dy);
+    dx = Math::clamp(dx, -MAX_PUPIL_X, MAX_PUPIL_X);
+    dy = Math::clamp(dy, -MAX_PUPIL_Y, MAX_PUPIL_Y);
+
+    left.targetPupilOffset.set(dx, dy);
+    right.targetPupilOffset.set(dx, dy);
 }
 
 void Face::setEyeSize(float width, float height)
