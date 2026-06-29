@@ -17,55 +17,87 @@ void FaceRenderer::draw(const Eye& left,
 
 void FaceRenderer::drawEye(const Eye& eye)
 {
-    if(!eye.visible)
+    if (!eye.visible)
         return;
 
+    drawEyeBody(eye);
+    drawPupil(eye);
+    drawUpperLid(eye);
+    drawLowerLid(eye);
+    drawEyebrow(eye);
+}
+
+void FaceRenderer::drawEyeBody(const Eye& eye)
+{
     auto& d = OLED.getDisplay();
 
-    int x = eye.position.x;
-    int y = eye.position.y;
-
-    int w = eye.size.x;
-    int h = eye.size.y;
-
-    // Eye body
     d.fillRoundRect(
-        x,
-        y,
-        w,
-        h,
-        eye.radius,
-        SSD1306_WHITE);
+        (int)eye.position.x,
+        (int)eye.position.y,
+        (int)eye.size.x,
+        (int)eye.size.y,
+        (int)eye.radius,
+        SSD1306_WHITE
+    );
+}
 
-    // Pupil
-    int px = x + w/2 + eye.pupilOffset.x;
-    int py = y + h/2 + eye.pupilOffset.y;
+void FaceRenderer::drawPupil(const Eye& eye)
+{
+    auto& d = OLED.getDisplay();
+
+    int px =
+        eye.position.x +
+        eye.size.x / 2 +
+        eye.pupilOffset.x;
+
+    int py =
+        eye.position.y +
+        eye.size.y / 2 +
+        eye.pupilOffset.y;
 
     d.fillCircle(
         px,
         py,
-        eye.pupilRadius,
-        SSD1306_BLACK);
+        (int)eye.pupilRadius,
+        SSD1306_BLACK
+    );
+}
 
-    // Upper eyelid
-    if(eye.upperLid > 0)
-    {
-        d.fillRect(
-            x,
-            y,
-            w,
-            eye.upperLid,
-            SSD1306_BLACK);
-    }
+void FaceRenderer::drawUpperLid(const Eye& eye)
+{
+    if (eye.upperLid <= 0)
+        return;
 
-    // Lower eyelid
-    if(eye.lowerLid > 0)
-    {
-        d.fillRect(
-            x,
-            y+h-eye.lowerLid,
-            w,
-            eye.lowerLid,
-            SSD1306_BLACK);
-    }
+    auto& d = OLED.getDisplay();
+
+    d.fillRect(
+        (int)eye.position.x,
+        (int)eye.position.y,
+        (int)eye.size.x,
+        (int)eye.upperLid,
+        SSD1306_BLACK
+    );
+}
+
+void FaceRenderer::drawLowerLid(const Eye& eye)
+{
+    if (eye.lowerLid <= 0)
+        return;
+
+    auto& d = OLED.getDisplay();
+
+    d.fillRect(
+        (int)eye.position.x,
+        (int)(eye.position.y + eye.size.y - eye.lowerLid),
+        (int)eye.size.x,
+        (int)eye.lowerLid,
+        SSD1306_BLACK
+    );
+}
+
+void FaceRenderer::drawEyebrow(const Eye&)
+{
+    // v0.2.1
+    // Stub
+    // Will be implemented later.
 }
