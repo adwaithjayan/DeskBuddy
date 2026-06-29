@@ -158,12 +158,28 @@ void Face::update()
 
 void Face::look(float dx, float dy)
 {
+    constexpr float MAX_EYE_X = 2.0f;
+    constexpr float MAX_EYE_Y = 1.0f;
+
     constexpr float MAX_PUPIL_X = 4.0f;
     constexpr float MAX_PUPIL_Y = 4.0f;
 
+    // Clamp input
     dx = Math::clamp(dx, -MAX_PUPIL_X, MAX_PUPIL_X);
     dy = Math::clamp(dy, -MAX_PUPIL_Y, MAX_PUPIL_Y);
 
+    // Small movement of the eye body
+    left.targetPosition.set(
+        LEFT_X + dx * 0.4f,
+        EYE_Y + dy * 0.4f
+    );
+
+    right.targetPosition.set(
+        RIGHT_X + dx * 0.4f,
+        EYE_Y + dy * 0.4f
+    );
+
+    // Larger movement of the pupil
     left.targetPupilOffset.set(dx, dy);
     right.targetPupilOffset.set(dx, dy);
 }

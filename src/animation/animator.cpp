@@ -41,27 +41,36 @@ void Animator::update()
             face.setUpperLid(0);
             face.setLowerLid(0);
 
-            blinkTime = random(3000,6000);
+            blinkTime = random(2500,7000);
         }
     }
 
     // ---------- Look Around ----------
 
-    if(now-lastMove > moveTime)
+   if(!blinking && now - lastMove > moveTime)
     {
         lastMove = now;
 
         randomLook();
 
-        moveTime = random(2000,4000);
+        moveTime = random(1500,3500);
     }
 }
 
 void Animator::randomLook()
 {
-    int dx=random(-3,4);
+    int chance = random(0, 100);
 
-    int dy=random(-2,3);
+    if (chance < 25)
+    {
+        // Look straight
+        face.look(0, 0);
+    }
+    else
+    {
+        int dx = random(-3, 4);
+        int dy = random(-2, 3);
 
-    face.look(dx,dy);
+        face.look(dx, dy);
+    }
 }
