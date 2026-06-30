@@ -46,6 +46,7 @@ public:
     void setEyebrow(float angle, float length);
 
 private:
+    float idleOffset = 0.0f;    
 
     Eye left;
     Eye right;

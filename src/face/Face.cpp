@@ -1,4 +1,5 @@
 #include "Face.h"
+#include <math.h>
 
 #include "../core/Math.h"
 #include "../core/Engine.h"
@@ -11,8 +12,8 @@ namespace
     constexpr float RIGHT_X = 82.0f;
     constexpr float EYE_Y = 20.0f;
 
-    constexpr float EYE_WIDTH = 18.0f;
-    constexpr float EYE_HEIGHT = 22.0f;
+    constexpr float EYE_WIDTH = 20.0f;
+    constexpr float EYE_HEIGHT = 20.0f;
 
     constexpr float POSITION_SPEED = 60.0f;
     constexpr float SIZE_SPEED = 180.0f;
@@ -35,7 +36,7 @@ void Face::initializeEyes()
     left.size.set(EYE_WIDTH, EYE_HEIGHT);
     left.targetSize = left.size;
 
-    left.radius = 5.0f;
+    left.radius = 7.0f;
 
     left.upperLid = 0.0f;
     left.lowerLid = 0.0f;
@@ -58,7 +59,7 @@ void Face::initializeEyes()
     right.size.set(EYE_WIDTH, EYE_HEIGHT);
     right.targetSize = right.size;
 
-    right.radius = 5.0f;
+    right.radius = 7.0f;
 
     right.upperLid = 0.0f;
     right.lowerLid = 0.0f;
@@ -86,12 +87,17 @@ void Face::update()
 {
     float dt = engine.deltaTime();
 
+    idleOffset = sinf(millis() * 0.0025f) * 0.2f;
+
+    left.targetPosition.y += idleOffset;
+    right.targetPosition.y += idleOffset;
+
     left.position =
-        Math::moveTowards(
+        Math::smoothStep(
             left.position,
             left.targetPosition,
-            POSITION_SPEED,
-            dt);
+            0.18f
+        );
 
     left.size =
         Math::moveTowards(
@@ -129,21 +135,20 @@ void Face::update()
             dt);
 
     left.pupilOffset =
-        Math::moveTowards(
+        Math::smoothStep(
             left.pupilOffset,
             left.targetPupilOffset,
-            PUPIL_SPEED,
-            dt);
+            0.25f
+        );
 
     //------------------------------------------------
 
     right.position =
-        Math::moveTowards(
+        Math::smoothStep(
             right.position,
             right.targetPosition,
-            POSITION_SPEED,
-            dt);
-
+            0.18f
+        );
     right.size =
         Math::moveTowards(
             right.size,
@@ -164,13 +169,13 @@ void Face::update()
             right.targetLowerLid,
             LID_SPEED,
             dt);
-
+            
     right.pupilOffset =
-        Math::moveTowards(
+        Math::smoothStep(
             right.pupilOffset,
             right.targetPupilOffset,
-            PUPIL_SPEED,
-            dt);
+            0.25f
+        );
 }
 
 void Face::look(float dx, float dy)
@@ -267,48 +272,45 @@ void Face::setEyebrow(float angle, float length)
     right.eyebrowLength = length;
 }
 
+
+
 void Face::setExpression(Expression expression)
 {
     switch (expression)
     {
         case Expression::Neutral:
-            setEyebrow(0, 18);
-            setUpperLid(0);
-            setLowerLid(0);
-            setEyeSize(18, 22);
-            setPupilOffset(0, 0);
+            setEyebrow(0.0f, 18.0f);
+            setUpperLid(0.0f);
+            setLowerLid(0.0f);
+            setEyeSize(20.0f, 20.0f);
             break;
 
         case Expression::Happy:
-            setEyebrow(2, 18);
-            setUpperLid(2);
-            setLowerLid(0);
-            setEyeSize(18, 21);
-            setPupilOffset(0, -1);
+            setEyebrow(2.0f, 18.0f);
+            setUpperLid(2.0f);
+            setLowerLid(1.0f);
+            setEyeSize(20.0f, 19.0f);
             break;
 
         case Expression::Angry:
-            setEyebrow(-3, 18);
-            setUpperLid(5);
-            setLowerLid(0);
-            setEyeSize(18, 18);
-            setPupilOffset(0, -1);
+            setEyebrow(-4.0f, 18.0f);
+            setUpperLid(5.0f);
+            setLowerLid(0.0f);
+            setEyeSize(20.0f, 18.0f);
             break;
 
         case Expression::Sleepy:
-            setEyebrow(0, 18);
-            setUpperLid(8);
-            setLowerLid(3);
-            setEyeSize(18, 18);
-            setPupilOffset(0, 1);
+            setEyebrow(0.0f, 18.0f);
+            setUpperLid(8.0f);
+            setLowerLid(3.0f);
+            setEyeSize(20.0f, 17.0f);
             break;
 
         case Expression::Surprised:
-            setEyebrow(4, 18);
-            setUpperLid(0);
-            setLowerLid(0);
-            setEyeSize(16, 28);
-            setPupilOffset(0, 0);
+            setEyebrow(4.0f, 18.0f);
+            setUpperLid(0.0f);
+            setLowerLid(0.0f);
+            setEyeSize(18.0f, 24.0f);
             break;
     }
 }

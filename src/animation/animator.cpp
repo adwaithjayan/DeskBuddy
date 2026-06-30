@@ -18,7 +18,7 @@ void Animator::begin()
     gazeX = 0;
     gazeY = 0;
 
-    face.setExpression(Expression::Neutral);
+    face.setExpression(Expression::Happy);
 }
 
 void Animator::update()
@@ -29,29 +29,55 @@ void Animator::update()
 
     // ---------------- Blink ----------------
 
-    if (behavior.state() != BehaviorState::Blinking)
+    switch (blinkState)
     {
+    case BlinkState::Idle:
+
         if (now - lastBlink > blinkTime)
         {
-            behavior.setState(BehaviorState::Blinking);
+            blinkState = BlinkState::Closing;
+            blinkStart = now;
+        }
+
+        break;
+
+    case BlinkState::Closing:
+
+        face.setUpperLid(11);
+        face.setLowerLid(11);
+
+        if (now - blinkStart > 80)
+        {
+            blinkState = BlinkState::Hold;
+            blinkStart = now;
+        }
+
+        break;
+
+    case BlinkState::Hold:
+
+        if (now - blinkStart > 30)
+        {
+            blinkState = BlinkState::Opening;
+            blinkStart = now;
+        }
+
+        break;
+
+    case BlinkState::Opening:
+
+        face.setUpperLid(0);
+        face.setLowerLid(0);
+
+        if (now - blinkStart > 180)
+        {
+            blinkState = BlinkState::Idle;
 
             lastBlink = now;
-
-            face.setUpperLid(11);
-            face.setLowerLid(11);
+            blinkTime = random(2500, 7000);
         }
-    }
-    else
-    {
-        if (now - lastBlink > 280)
-        {
-            behavior.setState(BehaviorState::Idle);
 
-            face.setUpperLid(0);
-            face.setLowerLid(0);
-
-            blinkTime = random(3000, 7000);
-        }
+        break;
     }
 
     // ---------------- Main Look ----------------
@@ -63,7 +89,7 @@ void Animator::update()
 
         randomLook();
 
-        moveTime = random(1800, 4000);
+        moveTime = random(1200, 2800);
     }
 
     // ---------------- Micro Movement ----------------
@@ -75,28 +101,41 @@ void Animator::update()
 
         microMove();
 
-        microMoveTime = random(700, 1300);
+        microMoveTime = random(250,700);
     }
 }
 
 void Animator::randomLook()
 {
-    int chance = random(0, 100);
+    int chance = random(100);
 
-    if (chance < 25)
+    // 60% stay near center
+    if (chance < 60)
     {
-        gazeX = 0;
-        gazeY = 0;
+        gazeX = random(-1, 2);
+        gazeY = random(-1, 2);
     }
+    // 20% look left/right
+    else if (chance < 80)
+    {
+        gazeX = random(-4, 5);
+        gazeY = random(-1, 2);
+    }
+    // 15% look upward
+    else if (chance < 95)
+    {
+        gazeX = random(-2, 3);
+        gazeY = random(-3, 0);
+    }
+    // 5% look downward
     else
     {
-        gazeX = random(-3, 4);
-        gazeY = random(-2, 3);
+        gazeX = random(-2, 3);
+        gazeY = random(1, 3);
     }
 
     face.look(gazeX, gazeY);
 }
-
 void Animator::microMove()
 {
     float dx = random(-1, 2) * 0.5f;

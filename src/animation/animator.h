@@ -20,7 +20,18 @@ private:
     unsigned long lastMove = 0;
     unsigned long moveTime = 0;
 
-    bool blinking = false;
+
+
+    enum class BlinkState
+    {
+        Idle,
+        Closing,
+        Hold,
+        Opening
+    };
+
+    BlinkState blinkState = BlinkState::Idle;   
+    unsigned long blinkStart = 0;
 
     unsigned long lastMicroMove = 0;
     unsigned long microMoveTime = 0;
