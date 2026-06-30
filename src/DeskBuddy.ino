@@ -38,21 +38,28 @@ void loop()
     engine.update();
 
     touch.update();
-    if (touch.tapped())
+    switch (touch.event())
     {
-        events.push(Event::Touch);
+        case TouchEvent::Tap:
+            events.push(Event::Touch);
+            break;
+
+        case TouchEvent::DoubleTap:
+            events.push(Event::DoubleTap);
+            break;
+
+        case TouchEvent::LongPress:
+            events.push(Event::LongTouch);
+            break;
+
+        case TouchEvent::None:
+            break;
     }
+    behaviorEngine.update();
 
-    if (touch.longPressed())
-    {
-        events.push(Event::LongTouch);
-    }
+    mood.update();
 
-behaviorEngine.update();
-
-mood.update();
-
-animator.update();
+    animator.update();
 
 
     face.update();        // Smoothly animate eyes

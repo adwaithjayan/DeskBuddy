@@ -5,16 +5,14 @@ enum class Event
     None,
 
     Touch,
-
+    DoubleTap,
     LongTouch,
 
     Blink,
 
     Sleep,
-
     Wake
 };
-
 class EventManager
 {
 public:
