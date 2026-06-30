@@ -37,10 +37,13 @@ struct Eye
     float pupilRadius = 2.5f;
 
     // Current eyebrow angle
-    float eyebrowAngle = 0.0f;
 
     // Target eyebrow angle
     float targetEyebrowAngle = 0.0f;
+
+    float eyebrowAngle = 0.0f;
+    float eyebrowLength = 18.0f;
+    int eyebrowOffset = 5;
 
     // Visible
     bool visible = true;

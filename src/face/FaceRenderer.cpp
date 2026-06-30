@@ -95,9 +95,38 @@ void FaceRenderer::drawLowerLid(const Eye& eye)
     );
 }
 
-void FaceRenderer::drawEyebrow(const Eye&)
+
+
+void FaceRenderer::drawEyebrow(const Eye& eye)
 {
-    // v0.2.1
-    // Stub
-    // Will be implemented later.
+    auto& d = OLED.getDisplay();
+
+    int x = (int)eye.position.x;
+    int y = (int)eye.position.y - eye.eyebrowOffset;
+
+    int len = (int)eye.eyebrowLength;
+    int slope = (int)eye.eyebrowAngle;
+
+    bool isLeftEye = (eye.position.x < 64);
+
+    if (isLeftEye)
+    {
+        d.drawLine(
+            x,
+            y,
+            x + len,
+            y - slope,
+            SSD1306_WHITE
+        );
+    }
+    else
+    {
+        d.drawLine(
+            x,
+            y - slope,
+            x + len,
+            y,
+            SSD1306_WHITE
+        );
+    }
 }

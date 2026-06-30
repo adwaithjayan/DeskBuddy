@@ -14,11 +14,11 @@ namespace
     constexpr float EYE_WIDTH = 18.0f;
     constexpr float EYE_HEIGHT = 22.0f;
 
-    constexpr float POSITION_SPEED = 120.0f;
+    constexpr float POSITION_SPEED = 60.0f;
     constexpr float SIZE_SPEED = 180.0f;
 
-    constexpr float LID_SPEED = 180.0f;
-    constexpr float PUPIL_SPEED = 220.0f;
+    constexpr float LID_SPEED = 90.0f;
+    constexpr float PUPIL_SPEED = 65.0f;
 
      
 }
@@ -71,6 +71,9 @@ void Face::initializeEyes()
 
     right.pupilRadius = 2.5f;
 
+    left.targetEyebrowAngle = 0.0f;
+    right.targetEyebrowAngle = 0.0f;
+
     right.visible = true;
 }
 
@@ -109,6 +112,20 @@ void Face::update()
             left.lowerLid,
             left.targetLowerLid,
             LID_SPEED,
+            dt);
+
+    left.eyebrowAngle =
+    Math::moveTowards(
+        left.eyebrowAngle,
+        left.targetEyebrowAngle,
+        25.0f,
+        dt);
+
+    right.eyebrowAngle =
+        Math::moveTowards(
+            right.eyebrowAngle,
+            right.targetEyebrowAngle,
+            25.0f,
             dt);
 
     left.pupilOffset =
@@ -184,6 +201,8 @@ void Face::look(float dx, float dy)
     right.targetPupilOffset.set(dx, dy);
 }
 
+
+
 void Face::setEyeSize(float width, float height)
 {
     left.targetSize.set(width, height);
@@ -228,4 +247,68 @@ const Eye& Face::leftEye() const
 const Eye& Face::rightEye() const
 {
     return right;
+}
+
+
+void Face::setEyebrowAngle(float angle)
+{
+    left.targetEyebrowAngle = angle;
+    right.targetEyebrowAngle = angle;
+}
+
+
+
+void Face::setEyebrow(float angle, float length)
+{
+    left.targetEyebrowAngle = angle;
+    right.targetEyebrowAngle = angle;
+
+    left.eyebrowLength = length;
+    right.eyebrowLength = length;
+}
+
+void Face::setExpression(Expression expression)
+{
+    switch (expression)
+    {
+        case Expression::Neutral:
+            setEyebrow(0, 18);
+            setUpperLid(0);
+            setLowerLid(0);
+            setEyeSize(18, 22);
+            setPupilOffset(0, 0);
+            break;
+
+        case Expression::Happy:
+            setEyebrow(2, 18);
+            setUpperLid(2);
+            setLowerLid(0);
+            setEyeSize(18, 21);
+            setPupilOffset(0, -1);
+            break;
+
+        case Expression::Angry:
+            setEyebrow(-3, 18);
+            setUpperLid(5);
+            setLowerLid(0);
+            setEyeSize(18, 18);
+            setPupilOffset(0, -1);
+            break;
+
+        case Expression::Sleepy:
+            setEyebrow(0, 18);
+            setUpperLid(8);
+            setLowerLid(3);
+            setEyeSize(18, 18);
+            setPupilOffset(0, 1);
+            break;
+
+        case Expression::Surprised:
+            setEyebrow(4, 18);
+            setUpperLid(0);
+            setLowerLid(0);
+            setEyeSize(16, 28);
+            setPupilOffset(0, 0);
+            break;
+    }
 }

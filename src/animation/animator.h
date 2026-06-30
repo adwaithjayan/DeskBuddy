@@ -10,6 +10,7 @@ public:
     void begin();
 
     void update();
+    void microMove();
 
 private:
 
@@ -20,6 +21,12 @@ private:
     unsigned long moveTime = 0;
 
     bool blinking = false;
+
+    unsigned long lastMicroMove = 0;
+    unsigned long microMoveTime = 0;
+
+    float gazeX = 0;
+    float gazeY = 0;                              
 
     void randomLook();
 
