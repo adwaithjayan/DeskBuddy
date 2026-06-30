@@ -32,12 +32,39 @@ void FaceRenderer::drawEyeBody(const Eye& eye)
 {
     auto& d = OLED.getDisplay();
 
+    int x = (int)eye.position.x;
+    int y = (int)eye.position.y;
+    int w = (int)eye.size.x;
+    int h = (int)(eye.size.y + eye.breathing);
+    int r = (int)eye.radius;
+
+    // Main eyeball
     d.fillRoundRect(
-        (int)eye.position.x,
-        (int)eye.position.y,
-        (int)eye.size.x,
-        (int)eye.size.y,
-        (int)eye.radius,
+        x,
+        y,
+        w,
+        h,
+        r,
+        SSD1306_WHITE
+    );
+
+    // Thin black outline
+    d.drawRoundRect(
+        x,
+        y,
+        w,
+        h,
+        r,
+        SSD1306_BLACK
+    );
+
+    // Restore the inside so the outline is only 1 pixel
+    d.fillRoundRect(
+        x + 1,
+        y + 1,
+        w - 2,
+        h - 2,
+        r - 1,
         SSD1306_WHITE
     );
 }
@@ -62,17 +89,36 @@ void FaceRenderer::drawPupil(const Eye& eye)
         -maxY,
         maxY);
 
+    int x = cx + (int)px;
+    int y = cy + (int)py;
+
+    // Outer iris
     d.fillCircle(
-        cx + (int)px,
-        cy + (int)py,
-        (int)eye.pupilRadius,
+        x,
+        y,
+        eye.pupilRadius + 1,
         SSD1306_BLACK
     );
 
-    // Eye highlight
+    // Inner pupil
+    d.fillCircle(
+        x,
+        y,
+        eye.pupilRadius - 1,
+        SSD1306_BLACK
+    );
+
+    // Main highlight
     d.drawPixel(
-        cx + (int)px - 1,
-        cy + (int)py - 1,
+        x - 1,
+        y - 1,
+        SSD1306_WHITE
+    );
+
+    // Secondary highlight
+    d.drawPixel(
+        x + 1,
+        y - 1,
         SSD1306_WHITE
     );
 }
@@ -84,17 +130,13 @@ void FaceRenderer::drawUpperLid(const Eye& eye)
 
     auto& d = OLED.getDisplay();
 
-    int x = (int)eye.position.x;
-    int y = (int)eye.position.y;
-    int w = (int)eye.size.x;
-    int h = (int)eye.upperLid;
+    int cx = eye.position.x + eye.size.x / 2;
+    int y = eye.position.y - 24 + eye.upperLid;
 
-    d.fillRoundRect(
-        x,
+    d.fillCircle(
+        cx,
         y,
-        w,
-        h + 2,
-        eye.radius,
+        26,
         SSD1306_BLACK
     );
 }
@@ -106,17 +148,13 @@ void FaceRenderer::drawLowerLid(const Eye& eye)
 
     auto& d = OLED.getDisplay();
 
-    int x = (int)eye.position.x;
-    int y = (int)(eye.position.y + eye.size.y - eye.lowerLid - 2);
-    int w = (int)eye.size.x;
-    int h = (int)eye.lowerLid + 2;
+    int cx = eye.position.x + eye.size.x / 2;
+    int y = eye.position.y + eye.size.y + 24 - eye.lowerLid;
 
-    d.fillRoundRect(
-        x,
+    d.fillCircle(
+        cx,
         y,
-        w,
-        h,
-        eye.radius,
+        26,
         SSD1306_BLACK
     );
 }
@@ -132,26 +170,30 @@ void FaceRenderer::drawEyebrow(const Eye& eye)
     int len = (int)eye.eyebrowLength;
     int slope = (int)eye.eyebrowAngle;
 
-    bool isLeftEye = (eye.position.x < 64);
+    bool leftEye = eye.position.x < 64;
 
-    if (isLeftEye)
+    int x1, y1, x2, y2;
+
+    if (leftEye)
     {
-        d.drawLine(
-            x,
-            y,
-            x + len,
-            y - slope,
-            SSD1306_WHITE
-        );
+        x1 = x;
+        y1 = y;
+
+        x2 = x + len;
+        y2 = y - slope;
     }
     else
     {
-        d.drawLine(
-            x,
-            y - slope,
-            x + len,
-            y,
-            SSD1306_WHITE
-        );
+        x1 = x;
+        y1 = y - slope;
+
+        x2 = x + len;
+        y2 = y;
     }
+
+    // Main eyebrow
+    d.drawLine(x1, y1, x2, y2, SSD1306_WHITE);
+
+    // Thickness
+    d.drawLine(x1, y1 + 1, x2, y2 + 1, SSD1306_WHITE);
 }

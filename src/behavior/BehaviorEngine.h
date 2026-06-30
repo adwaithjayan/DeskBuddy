@@ -15,7 +15,6 @@ private:
         ReactStart,
         ReactHappy,
 
-        DoubleTapReaction,
 
         Drowsy,
         Sleeping,

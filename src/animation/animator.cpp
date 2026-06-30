@@ -2,6 +2,7 @@
 
 #include "face/Face.h"
 #include "../behavior/BehaviorManager.h"
+#include "core/Engine.h"
 
 Animator animator;
 
@@ -10,6 +11,8 @@ void Animator::begin()
     behavior.begin();
 
     randomSeed(micros());
+
+    nextSaccade = millis() + random(1000, 3000);
 
     blinkTime = random(3000, 6000);
     moveTime = random(1500, 3500);
@@ -103,6 +106,25 @@ void Animator::update()
 
         microMoveTime = random(250,700);
     }
+
+    if (millis() > nextSaccade)
+    {
+        face.look(
+            random(-1, 2),
+            random(-1, 2));
+
+        nextSaccade =
+            millis() + random(1000, 4000);
+    }
+
+    breathingPhase += engine.deltaTime() * 1.2f;
+
+    if (breathingPhase > TWO_PI)
+        breathingPhase -= TWO_PI;
+
+    float breath = sinf(breathingPhase);
+
+    face.setBreathing(breath);
 }
 
 void Animator::randomLook()

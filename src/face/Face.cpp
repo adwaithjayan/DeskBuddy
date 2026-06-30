@@ -37,12 +37,13 @@ void Face::initializeEyes()
     left.targetSize = left.size;
 
     left.radius = 7.0f;
+    left.targetRadius = left.radius;
 
-    left.upperLid = 0.0f;
-    left.lowerLid = 0.0f;
+    left.upperLid = 11.0f;
+    left.lowerLid = 11.0f;
 
-    left.targetUpperLid = 0.0f;
-    left.targetLowerLid = 0.0f;
+    left.targetUpperLid = 11.0f;
+    left.targetLowerLid = 11.0f;
 
     left.pupilOffset.set(0.0f, 0.0f);
     left.targetPupilOffset = left.pupilOffset;
@@ -60,12 +61,13 @@ void Face::initializeEyes()
     right.targetSize = right.size;
 
     right.radius = 7.0f;
+    right.targetRadius = right.radius;
 
-    right.upperLid = 0.0f;
-    right.lowerLid = 0.0f;
+    right.upperLid = 11.0f;
+    right.lowerLid = 11.0f;
 
-    right.targetUpperLid = 0.0f;
-    right.targetLowerLid = 0.0f;
+    right.targetUpperLid = 11.0f;
+    right.targetLowerLid = 11.0f;
 
     right.pupilOffset.set(0.0f, 0.0f);
     right.targetPupilOffset = right.pupilOffset;
@@ -104,6 +106,13 @@ void Face::update()
             left.size,
             left.targetSize,
             SIZE_SPEED,
+            dt);
+
+    left.radius =
+        Math::moveTowards(
+            left.radius,
+            left.targetRadius,
+            20.0f,
             dt);
 
     left.upperLid =
@@ -154,6 +163,13 @@ void Face::update()
             right.size,
             right.targetSize,
             SIZE_SPEED,
+            dt);
+
+    right.radius =
+        Math::moveTowards(
+            right.radius,
+            right.targetRadius,
+            20.0f,
             dt);
 
     right.upperLid =
@@ -273,6 +289,13 @@ void Face::setEyebrow(float angle, float length)
 }
 
 
+void Face::setBreathing(float value)
+{
+    left.breathing = value;
+    right.breathing = value;
+}
+
+
 
 void Face::setExpression(Expression expression)
 {
@@ -283,34 +306,47 @@ void Face::setExpression(Expression expression)
             setUpperLid(0.0f);
             setLowerLid(0.0f);
             setEyeSize(20.0f, 20.0f);
+            left.targetRadius = 5.0f;
+            right.targetRadius = 5.0f;
             break;
 
         case Expression::Happy:
             setEyebrow(2.0f, 18.0f);
             setUpperLid(2.0f);
             setLowerLid(1.0f);
-            setEyeSize(20.0f, 19.0f);
+            setEyeSize(20.0f, 18.0f);
+            left.targetRadius = 8.0f;
+            right.targetRadius = 8.0f;
             break;
 
         case Expression::Angry:
             setEyebrow(-4.0f, 18.0f);
             setUpperLid(5.0f);
             setLowerLid(0.0f);
-            setEyeSize(20.0f, 18.0f);
+            setEyeSize(19.0f, 18.0f);
+
+            left.targetRadius = 3.0f;
+            right.targetRadius = 3.0f;
             break;
 
         case Expression::Sleepy:
             setEyebrow(0.0f, 18.0f);
             setUpperLid(8.0f);
             setLowerLid(3.0f);
-            setEyeSize(20.0f, 17.0f);
+            setEyeSize(22.0f, 14.0f);
+
+            left.targetRadius = 2.0f;
+            right.targetRadius = 2.0f;
             break;
 
         case Expression::Surprised:
             setEyebrow(4.0f, 18.0f);
             setUpperLid(0.0f);
             setLowerLid(0.0f);
-            setEyeSize(18.0f, 24.0f);
+            setEyeSize(18.0f, 26.0f);
+
+            left.targetRadius = 10.0f;
+            right.targetRadius = 10.0f;
             break;
     }
 }

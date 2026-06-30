@@ -45,6 +45,8 @@ public:
 
     void setEyebrow(float angle, float length);
 
+    void setBreathing(float value);
+
 private:
     float idleOffset = 0.0f;    
 

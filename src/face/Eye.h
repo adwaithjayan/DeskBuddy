@@ -18,7 +18,7 @@ struct Eye
 
     // Corner radius
     float radius = 5.0f;
-
+    float targetRadius = 5.0f;
     // Current eyelids
     float upperLid = 0.0f;
     float lowerLid = 0.0f;
@@ -47,4 +47,6 @@ struct Eye
 
     // Visible
     bool visible = true;
+
+    float breathing = 0.0f;
 };

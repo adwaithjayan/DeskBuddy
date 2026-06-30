@@ -1,12 +1,14 @@
 #include "BehaviorEngine.h"
 
 #include "../behaviors/IdleBehavior.h"
-
+#include "sequence/Sequence.h"
 #include <Arduino.h>
 
 #include "../events/Event.h"
 #include "../mood/Mood.h"
 #include "../face/Face.h"
+#include "../personality/Personality.h"
+
 
 BehaviorEngine behaviorEngine;
 
@@ -21,6 +23,10 @@ void BehaviorEngine::begin()
 
 void BehaviorEngine::update()
 {
+    if (sequence.playing())
+    {
+        return;
+    }
     switch (state)
     {
         //====================================================
@@ -48,11 +54,11 @@ void BehaviorEngine::update()
 
                     lastInteraction = millis();
 
-                    face.look(0, -2);
+                    personality.becomePlayful();
 
-                    state = State::ReactStart;
+                    sequence.play(Sequence::Tap);
 
-                    stateStart = millis();
+                    state = State::Idle;
 
                     break;
 
@@ -60,17 +66,19 @@ void BehaviorEngine::update()
 
                     lastInteraction = millis();
 
-                    mood.set(Mood::Surprised);
+                    personality.becomeCurious();
 
-                    state = State::DoubleTapReaction;
+                    sequence.play(Sequence::DoubleTap);
 
-                    stateStart = millis();
+                    state = State::Idle;
 
                     break;
 
                 case Event::LongTouch:
 
                     lastInteraction = millis();
+
+                    personality.becomeSleepy();
 
                     mood.set(Mood::Sleepy);
 
@@ -94,11 +102,9 @@ void BehaviorEngine::update()
 
             if (millis() - stateStart > 250)
             {
-                mood.set(Mood::Happy);
+                sequence.play(Sequence::Tap);
 
-                state = State::ReactHappy;
-
-                stateStart = millis();
+                state = State::Idle;
             }
 
             break;
@@ -118,18 +124,6 @@ void BehaviorEngine::update()
         // DOUBLE TAP
         //====================================================
 
-        case State::DoubleTapReaction:
-
-            if (millis() - stateStart > 1200)
-            {
-                mood.set(Mood::Happy);
-
-                state = State::ReactHappy;
-
-                stateStart = millis();
-            }
-
-            break;
 
         //====================================================
         // LONG PRESS

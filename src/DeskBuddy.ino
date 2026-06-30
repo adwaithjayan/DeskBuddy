@@ -8,6 +8,9 @@
 #include "touch/TouchManager.h"
 #include "events/Event.h"
 #include "behavior/BehaviorEngine.h"
+#include "sequence/Sequence.h"
+#include "personality/Personality.h"
+
 
 void setup()
 {
@@ -30,7 +33,12 @@ void setup()
 
     scheduler.begin();
 
+
     events.begin();
+    sequence.begin();
+    sequence.play(Sequence::Boot);
+
+    personality.begin();
 }
 
 void loop()
@@ -55,6 +63,9 @@ void loop()
         case TouchEvent::None:
             break;
     }
+
+    sequence.update();
+
     behaviorEngine.update();
 
     mood.update();
@@ -68,4 +79,5 @@ void loop()
         face.leftEye(),
         face.rightEye()
     );
+    personality.update();
 }

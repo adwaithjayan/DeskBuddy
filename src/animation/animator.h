@@ -20,6 +20,10 @@ private:
     unsigned long lastMove = 0;
     unsigned long moveTime = 0;
 
+    unsigned long nextSaccade = 0;
+
+    float breathingPhase = 0.0f;
+
 
 
     enum class BlinkState
