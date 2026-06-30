@@ -11,6 +11,8 @@
 #include "sequence/Sequence.h"
 #include "personality/Personality.h"
 #include "memory/Memory.h"
+#include "settings/Settings.h"
+
 
 
 void setup()
@@ -23,6 +25,9 @@ void setup()
     }
 
     touch.begin();
+
+    settings.begin();
+    settings.load();
 
     engine.begin();
     memory.begin();
