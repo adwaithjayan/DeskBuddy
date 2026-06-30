@@ -16,7 +16,16 @@ void TouchManager::update()
 {
     currentEvent = TouchEvent::None;
 
-    bool pressed = touchRead(TOUCH_PIN) < TOUCH_THRESHOLD;
+    bool pressed = false;
+
+    if (TOUCH_INPUT_TYPE == TouchInputType::Capacitive)
+    {
+        pressed = touchRead(TOUCH_PIN) < TOUCH_THRESHOLD;
+    }
+    else
+    {
+        pressed = digitalRead(TOUCH_DIGITAL_PIN) == LOW;
+    }
 
     // Finger touched
     if (pressed && !touching)
