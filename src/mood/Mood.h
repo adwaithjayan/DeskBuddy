@@ -23,6 +23,8 @@ public:
 
 private:
     Mood currentMood = Mood::Neutral;
+    unsigned long moodStart = 0;
+    bool moodBlink = false;
 };
 
 extern MoodManager mood;
