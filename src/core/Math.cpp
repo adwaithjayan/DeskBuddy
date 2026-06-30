@@ -76,4 +76,20 @@ Vec2 moveTowards(const Vec2& current,
     );
 }
 
+float smoothStep(float current, float target, float factor)
+{
+    return current + (target - current) * factor;
+}
+
+Vec2 smoothStep(const Vec2& current,
+                const Vec2& target,
+                float factor)
+{
+    return Vec2(
+        smoothStep(current.x, target.x, factor),
+        smoothStep(current.y, target.y, factor)
+    );
+}
+
+
 }

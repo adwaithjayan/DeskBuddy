@@ -11,7 +11,24 @@
 #define OLED_SDA 21
 #define OLED_SCL 22
 
-// Touch Pin
-#define TOUCH_PIN 4
+
+enum class TouchInputType
+{
+    Capacitive,
+    Digital
+};
+
+constexpr TouchInputType TOUCH_INPUT_TYPE =
+    TouchInputType::Capacitive;
+
+// Capacitive touch pin
+constexpr int TOUCH_PIN = 4;
+
+// Digital touch module pin
+constexpr int TOUCH_DIGITAL_PIN = 4;
+
+// Threshold for capacitive touch
+constexpr int TOUCH_THRESHOLD = 25;
+
 
 #endif

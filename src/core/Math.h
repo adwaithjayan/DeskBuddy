@@ -28,4 +28,11 @@ namespace Math
                      const Vec2& target,
                      float speed,
                      float deltaTime);
+
+    float smoothStep(float current, float target, float factor);
+
+    Vec2 smoothStep(const Vec2& current, const Vec2& target, float factor);
+
+
+
 }
