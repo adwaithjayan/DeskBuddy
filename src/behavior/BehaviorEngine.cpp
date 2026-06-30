@@ -1,13 +1,15 @@
 #include "BehaviorEngine.h"
 
-#include "../behaviors/IdleBehavior.h"
+#include "behaviors/IdleBehavior.h"
 #include "sequence/Sequence.h"
 #include <Arduino.h>
 
-#include "../events/Event.h"
-#include "../mood/Mood.h"
-#include "../face/Face.h"
-#include "../personality/Personality.h"
+#include "events/Event.h"
+#include "mood/Mood.h"
+#include "face/Face.h"
+#include "personality/Personality.h"
+#include "relationship/Relationship.h"
+#include "memory/Memory.h"
 
 
 BehaviorEngine behaviorEngine;
@@ -53,9 +55,9 @@ void BehaviorEngine::update()
                 case Event::Touch:
 
                     lastInteraction = millis();
+                    relationship.onTouch();
 
-                    personality.becomePlayful();
-
+                    memory.record(MemoryEvent::Touch);
                     sequence.play(Sequence::Tap);
 
                     state = State::Idle;
@@ -65,9 +67,9 @@ void BehaviorEngine::update()
                 case Event::DoubleTap:
 
                     lastInteraction = millis();
+                    relationship.onDoubleTap();
 
-                    personality.becomeCurious();
-
+                    memory.record(MemoryEvent::DoubleTap);
                     sequence.play(Sequence::DoubleTap);
 
                     state = State::Idle;
@@ -77,8 +79,8 @@ void BehaviorEngine::update()
                 case Event::LongTouch:
 
                     lastInteraction = millis();
-
-                    personality.becomeSleepy();
+                    relationship.onLongTouch();
+                    memory.record(MemoryEvent::LongTouch);
 
                     mood.set(Mood::Sleepy);
 

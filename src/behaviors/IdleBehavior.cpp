@@ -2,9 +2,10 @@
 
 #include <Arduino.h>
 
-#include "../face/Face.h"
-#include "../mood/Mood.h"
-#include "../personality/Personality.h"
+#include "face/Face.h"
+#include "mood/Mood.h"
+#include "memory/Memory.h"
+#include "personality/Personality.h"
 
 IdleBehavior idleBehavior;
 
@@ -17,7 +18,20 @@ static IdlePattern choosePattern()
     switch (personality.current())
     {
         case Personality::Calm:
-            return static_cast<IdlePattern>(random(4));
+            switch (memory.lastEvent())
+            {
+                case MemoryEvent::Touch:
+                    return IdlePattern::Relaxed;
+
+                case MemoryEvent::DoubleTap:
+                    return IdlePattern::Curious;
+
+                case MemoryEvent::LongTouch:
+                    return IdlePattern::Thinking;
+
+                default:
+                    return static_cast<IdlePattern>(random(4));
+            }
 
         case Personality::Playful:
             return (random(100) < 70)

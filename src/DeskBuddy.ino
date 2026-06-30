@@ -10,6 +10,7 @@
 #include "behavior/BehaviorEngine.h"
 #include "sequence/Sequence.h"
 #include "personality/Personality.h"
+#include "memory/Memory.h"
 
 
 void setup()
@@ -24,7 +25,7 @@ void setup()
     touch.begin();
 
     engine.begin();
-
+    memory.begin();
     face.begin();
 
     mood.begin();
@@ -37,6 +38,7 @@ void setup()
     events.begin();
     sequence.begin();
     sequence.play(Sequence::Boot);
+    memory.record(MemoryEvent::Boot);
 
     personality.begin();
 }

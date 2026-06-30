@@ -2,7 +2,8 @@
 
 #include <Arduino.h>
 
-#include "../face/Face.h"
+#include "face/Face.h"
+#include "memory/Memory.h"
 
 MoodManager mood;
 
@@ -34,6 +35,20 @@ void MoodManager::set(Mood m)
         return;
 
     currentMood = m;
+
+    switch (m)
+    {
+        case Mood::Happy:
+            memory.record(MemoryEvent::Happy);
+            break;
+
+        case Mood::Curious:
+            memory.record(MemoryEvent::Curious);
+            break;
+
+        default:
+            break;
+    }
     moodStart = millis();
 
     switch (currentMood)
