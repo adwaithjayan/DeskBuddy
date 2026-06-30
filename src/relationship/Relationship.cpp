@@ -1,11 +1,13 @@
 #include "Relationship.h"
 #include <Arduino.h>
+#include "../settings/Settings.h"
+
 
 RelationshipManager relationship;
 
 void RelationshipManager::begin()
 {
-    level = 50;
+    level = settings.relationship();
     lastDecay = millis();
 }
 
@@ -22,11 +24,13 @@ void RelationshipManager::update()
 void RelationshipManager::increase(int amount)
 {
     level = min(100, level + amount);
+    settings.setRelationship(level);
 }
 
 void RelationshipManager::decrease(int amount)
 {
     level = max(0, level - amount);
+    settings.setRelationship(level);
 }
 
 int RelationshipManager::value() const

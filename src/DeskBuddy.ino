@@ -12,6 +12,8 @@
 #include "personality/Personality.h"
 #include "memory/Memory.h"
 #include "settings/Settings.h"
+#include "relationship/Relationship.h"
+
 
 
 
@@ -19,40 +21,53 @@ void setup()
 {
     Serial.begin(115200);
 
+    // Persistent settings
+    settings.begin();
+    settings.load();
+
+    // Display
     if (!OLED.begin())
     {
         while (true);
     }
 
-    touch.begin();
-
-    settings.begin();
-    settings.load();
-
+    // Core
     engine.begin();
+
+    // Systems
+    relationship.begin();
+    personality.begin();
     memory.begin();
+
+    // Input
+    touch.begin();
+    events.begin();
+
+    // Face
     face.begin();
-
     mood.begin();
-
     animator.begin();
 
+    // Behaviors
     scheduler.begin();
+    behaviorEngine.begin();
 
-
-    events.begin();
+    // Sequences
     sequence.begin();
     sequence.play(Sequence::Boot);
     memory.record(MemoryEvent::Boot);
-
-    personality.begin();
 }
+
+
 
 void loop()
 {
+    // Core timing
     engine.update();
 
+    // Input
     touch.update();
+
     switch (touch.event())
     {
         case TouchEvent::Tap:
@@ -71,20 +86,22 @@ void loop()
             break;
     }
 
-    sequence.update();
+    // Persistent systems
+    relationship.update();
+    personality.update();
 
+    // Behaviour
     behaviorEngine.update();
 
+    // Animation
+    sequence.update();
     mood.update();
-
     animator.update();
+    face.update();
 
-
-    face.update();        // Smoothly animate eyes
-
+    // Render
     renderer.draw(
         face.leftEye(),
         face.rightEye()
     );
-    personality.update();
 }

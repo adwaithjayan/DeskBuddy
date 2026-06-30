@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Arduino.h>
+
 class SettingsManager
 {
 public:
@@ -15,6 +17,8 @@ public:
     // Relationship
     void setRelationship(int value);
     int relationship() const;
+
+    void end();
 
 private:
     uint8_t displayBrightness = 255;
